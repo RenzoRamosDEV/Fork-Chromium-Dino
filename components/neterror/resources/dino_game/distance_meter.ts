@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import {assert} from 'chrome://resources/js/assert.js';
+// Reemplazado: el original importa de 'chrome://resources/js/assert.js'
+import {assert} from '../mocks/assert.js';
 
 import {IS_HIDPI, IS_RTL} from './constants.js';
 import type {ImageSpriteProvider} from './image_sprite_provider.js';
@@ -214,7 +215,7 @@ export class DistanceMeter {
 
         // Create a string representation of the distance with leading 0.
         const distanceStr =
-            (this.defaultString + distance).substr(-this.maxScoreUnits);
+            (this.defaultString + distance).slice(-this.maxScoreUnits);
         this.digits = distanceStr.split('');
       } else {
         this.digits = this.defaultString.split('');
@@ -289,7 +290,7 @@ export class DistanceMeter {
   setHighScore(distance: number) {
     distance = this.getActualDistance(distance);
     const highScoreStr =
-        (this.defaultString + distance).substr(-this.maxScoreUnits);
+        (this.defaultString + distance).slice(-this.maxScoreUnits);
 
     this.highScore = 'HI ' + highScoreStr;
   }
