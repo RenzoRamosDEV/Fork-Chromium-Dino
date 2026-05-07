@@ -1,0 +1,163 @@
+/* Estilos standalone del juego del dinosaurio.
+   Extrae y adapta solo las reglas necesarias de neterror.css,
+   eliminando todo lo relacionado con la página de error de Chrome. */
+
+/* ─── Reset y base ───────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background-color: #fff;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* Soporte para modo oscuro del sistema operativo */
+  color-scheme: light dark;
+}
+
+/* Modo oscuro: invierte el fondo igual que lo hace Chrome */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #323232;
+    color: #fff;
+  }
+}
+
+/* ─── Contenedor principal del juego ─────────────────────────────────────── */
+/* Runner crea dinámicamente un div con la clase .runner-container dentro de
+   .interstitial-wrapper. Aquí definimos sus dimensiones y posición. */
+.runner-container {
+  height: 150px;
+  max-width: 600px;
+  overflow: hidden;
+  position: relative;
+  width: 44px; /* Empieza con el ancho del dino; se expande con la animación de intro */
+}
+
+/* Canvas donde se dibuja todo el juego */
+.runner-canvas {
+  height: 150px;
+  max-width: 600px;
+  opacity: 1;
+}
+
+/* ─── Icono offline (necesario en el DOM pero oculto en standalone) ───────── */
+/* Runner busca .icon-offline y lo oculta al iniciar; debe existir en el HTML */
+.icon-offline {
+  display: none;
+}
+
+/* ─── Animación de modo invertido (noche) ────────────────────────────────── */
+/* Runner añade la clase 'inverted' al <html> para activar el modo noche */
+html.inverted,
+html.inverted body {
+  background-color: #323232;
+}
+
+html.inverted .runner-canvas {
+  filter: invert(1);
+}
+
+/* ─── Estado crashed ──────────────────────────────────────────────────────── */
+/* Runner añade 'crashed' al contenedor cuando el dino choca */
+.runner-container.crashed .runner-canvas {
+  /* Sin cambios visuales extra en standalone; el sprite del dino ya cambia */
+}
+
+/* ─── Controlador táctil ──────────────────────────────────────────────────── */
+/* Runner crea un div .controller sobre toda la pantalla al jugar en móvil.
+   dvh (dynamic viewport height) evita el solapamiento con las barras del
+   navegador en Safari iOS; navegadores sin soporte dvh usan el fallback 100vh. */
+.controller {
+  height: 100vh;
+  height: 100dvh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  width: 100dvw;
+  z-index: 1;
+}
+
+/* ─── Región live para accesibilidad (lectores de pantalla) ──────────────── */
+.offline-runner-live-region {
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}
+
+/* ─── Toggle de velocidad lenta (accesibilidad) ──────────────────────────── */
+.slow-speed-option {
+  align-items: center;
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.slow-speed-option.hidden {
+  display: none;
+}
+
+/* ─── Utilidad hidden usada por Runner ───────────────────────────────────── */
+/* Runner usa HIDDEN_CLASS = 'hidden' para mostrar/ocultar el touchController */
+.hidden {
+  display: none !important;
+}
+
+/* ─── Modo arcade (chrome://dino) ────────────────────────────────────────── */
+/* Solo se activa si el título de la página empieza con "chrome://dino/" */
+body.arcade-mode {
+  margin: 0;
+}
+
+body.arcade-mode .runner-container {
+  margin: 0 auto;
+}
+
+/* ─── Recursos ocultos (sprites e imágenes del juego) ───────────────────── */
+/* Estos elementos solo existen para que Runner los lea; no deben ser visibles */
+#offline-resources {
+  display: none;
+}
+
+/* ─── Wrapper del juego ──────────────────────────────────────────────────── */
+/* width:100% es necesario para que Runner calcule correctamente dimensions.width.
+   Runner lee outerContainerEl.offsetWidth; sin width explícito el flex column
+   shrinks al tamaño del runner-container (44px) y el juego no se expande. */
+.interstitial-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ─── Móvil / pantallas pequeñas ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .runner-container {
+    max-width: 100vw;
+  }
+
+  .runner-canvas {
+    max-width: 100vw;
+  }
+
+  /* Reduce el texto del toggle de velocidad para pantallas muy pequeñas */
+  .slow-speed-option {
+    font-size: 11px;
+  }
+}

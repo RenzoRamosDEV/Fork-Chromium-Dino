@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- color-scheme avisa al navegador del soporte dark/light para evitar flash -->
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="El juego del dinosaurio de Chrome — jugable offline sin conexión a internet.">
+  <!-- Open Graph para compartir en redes sociales -->
+  <meta property="og:title" content="Dino Game">
+  <meta property="og:description" content="El juego del dinosaurio de Chrome — jugable offline sin conexión a internet.">
+  <meta property="og:type" content="website">
+  <!-- Favicon: sprite del dino recortado del sprite sheet del juego -->
+  <link rel="icon" type="image/png" href="images/default_100_percent/offline/100-offline-sprite.png">
+  <title>Dino Game</title>
+  <link rel="stylesheet" href="standalone.css">
+</head>
+<body>
+
+  <!--
+    Contenedor principal del juego.
+    Runner.initializeInstance('.interstitial-wrapper') inyecta aquí
+    el div .runner-container con el canvas del juego.
+  -->
+  <div class="interstitial-wrapper">
+    <!--
+      Elemento requerido por Runner.init(): busca '.icon-offline' y lo oculta.
+      En Chromium era el icono del dinosaurio estático de la error page.
+      En standalone simplemente debe existir en el DOM.
+    -->
+    <div class="icon-offline" aria-hidden="true"></div>
+  </div>
+
+  <!--
+    Recursos del juego: sprites y sonidos.
+    Están ocultos con CSS (display: none) pero Runner los lee con querySelector.
+
+    Runner.loadImages() busca:
+      - #offline-resources-1x → sprite sheet a resolución normal (1x)
+      - #offline-resources-2x → sprite sheet a resolución Retina (2x / HiDPI)
+    Selecciona automáticamente el correcto según window.devicePixelRatio.
+
+    Runner.loadSounds() busca <template id="audio-resources"> y extrae
+    los elementos <audio> de su contenido para decodificarlos como AudioBuffer.
+  -->
+  <div id="offline-resources">
+    <img id="offline-resources-1x"
+         src="images/default_100_percent/offline/100-offline-sprite.png"
+         alt="">
+    <img id="offline-resources-2x"
+         src="images/default_200_percent/offline/200-offline-sprite.png"
+         alt="">
+
+    <template id="audio-resources">
+      <!-- Sonido al saltar / iniciar el juego -->
+      <audio id="offline-sound-press" src="sounds/button-press.mp3"></audio>
+      <!-- Sonido al chocar contra un obstáculo -->
+      <audio id="offline-sound-hit" src="sounds/hit.mp3"></audio>
+      <!-- Sonido al superar un múltiplo de 100 puntos -->
+      <audio id="offline-sound-reached" src="sounds/score-reached.mp3"></audio>
+    </template>
+  </div>
+
+  <!--
+    Entry point del juego.
+    Vite resuelve standalone.ts → standalone.js al compilar.
+    En modo dev sirve el TypeScript directamente vía esbuild.
+  -->
+  <script type="module" src="standalone.ts"></script>
+</body>
+</html>
