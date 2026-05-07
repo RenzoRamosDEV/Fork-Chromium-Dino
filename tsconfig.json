@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    // Target: ES2020 soporta BigInt, Promise.allSettled, etc. Bien soportado en navegadores modernos.
+    "target": "ES2022",
+    // Módulos ES nativos: Vite los sirve tal cual en dev (sin bundling extra).
+    "module": "ESNext",
+    // 'bundler': modo moderno de resolución; compatible con Vite + paths sin extensiones en imports.
+    "moduleResolution": "bundler",
+    // Habilita comprobaciones estrictas de TypeScript (null checks, implicit any, etc.).
+    "strict": true,
+    // Omite comprobación de tipos en archivos .d.ts de node_modules para acelerar la compilación.
+    "skipLibCheck": true,
+    // Incluye tipos de DOM (HTMLElement, Canvas, AudioContext, etc.) y ES2020.
+    // ES2022 incluye Array.at(), Object.hasOwn() y otras APIs usadas en horizon.ts
+    "lib": ["ES2022", "DOM"],
+    // Permite importar módulos CommonJS como default imports (usado por algunos paquetes de Vite).
+    "esModuleInterop": true,
+    // Permite que archivos JS coexistan con TS sin error.
+    "allowJs": false
+  },
+  // Incluye todos los .ts del proyecto excepto los de distribución.
+  "include": [
+    "components/**/*.ts",
+    "vite.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
