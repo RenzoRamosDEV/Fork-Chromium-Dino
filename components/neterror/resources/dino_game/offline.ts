@@ -2,8 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import {assert} from 'chrome://resources/js/assert.js';
-import {loadTimeData} from 'chrome://resources/js/load_time_data.js';
+// Reemplazados: los originales importan de chrome://resources/ que solo existe
+// dentro del runtime de Chromium. En standalone usamos nuestros mocks.
+import {assert} from '../mocks/assert.js';
+import {loadTimeData} from '../mocks/load_time_data.js';
 
 import {HIDDEN_CLASS} from '../constants.js';
 
@@ -367,7 +369,7 @@ export class Runner implements ImageSpriteProvider, GameStateProvider,
     assert(loadTimeData.valueExists('altGameType'));
     if (GAME_TYPE.length > 0) {
       const parsedValue =
-          Number.parseInt(loadTimeData.getValue('altGameType'), 10);
+          Number.parseInt(loadTimeData.getValue('altGameType') as string, 10);
       const type = GAME_TYPE[parsedValue - 1];
       this.gameType = type || null;
     }
@@ -379,7 +381,7 @@ export class Runner implements ImageSpriteProvider, GameStateProvider,
   private setupDisabledRunner() {
     this.containerEl = document.createElement('div');
     this.containerEl.className = RunnerClasses.SNACKBAR;
-    this.containerEl.textContent = loadTimeData.getValue('disabledEasterEgg');
+    this.containerEl.textContent = loadTimeData.getValue('disabledEasterEgg') as string;
     this.outerContainerEl.appendChild(this.containerEl);
 
     // Show notification when the activation key is pressed.
@@ -487,9 +489,10 @@ export class Runner implements ImageSpriteProvider, GameStateProvider,
     }
   }
 
-  /**
-   * Load and decode base 64 encoded sounds.
-   */
+  // Carga y decodifica los efectos de sonido.
+  // En Chromium original, los <audio> tienen src como data URL base64 inyectado
+  // por C++. En standalone, tienen rutas de archivo normales (http://...).
+  // Esta versión detecta ambos casos automáticamente.
   private loadSounds() {
     if (IS_IOS) {
       return;
@@ -505,17 +508,36 @@ export class Runner implements ImageSpriteProvider, GameStateProvider,
       const audioElement = resourceTemplate.querySelector<HTMLAudioElement>(
           `#${RunnerSounds[sound as keyof typeof RunnerSounds]}`);
       assert(audioElement);
-      let soundSrc = audioElement.src;
-      soundSrc = soundSrc.substr(soundSrc.indexOf(',') + 1);
-      const buffer = decodeBase64ToArrayBuffer(soundSrc);
+      const soundSrc = audioElement.src;
 
-      // Async, so no guarantee of order in array.
-      this.audioContext.decodeAudioData(buffer, audioBuffer => {
-        this.soundFx = {
-          ...this.soundFx,
-          [sound]: audioBuffer,
-        };
-      });
+      if (soundSrc.startsWith('data:')) {
+        // ── Modo Chromium: src es un data URL "data:audio/...;base64,<datos>" ──
+        // Extrae solo la parte base64 (después de la coma) y la decodifica.
+        const base64Data = soundSrc.substring(soundSrc.indexOf(',') + 1);
+        const buffer = decodeBase64ToArrayBuffer(base64Data);
+        this.audioContext.decodeAudioData(buffer, audioBuffer => {
+          this.soundFx = {...this.soundFx, [sound]: audioBuffer};
+        });
+      } else {
+        // ── Modo standalone: src es una URL normal (http://localhost/sounds/...) ──
+        // Descargamos el archivo y lo decodificamos directamente con Web Audio.
+        // Si falla (archivo no encontrado, etc.) el juego continúa sin ese sonido.
+        const ctx = this.audioContext;
+        fetch(soundSrc)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status} loading ${soundSrc}`);
+              }
+              return response.arrayBuffer();
+            })
+            .then(buffer => ctx.decodeAudioData(buffer))
+            .then(audioBuffer => {
+              this.soundFx = {...this.soundFx, [sound]: audioBuffer};
+            })
+            .catch(_err => {
+              // Sonido no disponible; el juego funciona sin efectos de audio.
+            });
+      }
     }
   }
 
@@ -669,7 +691,7 @@ export class Runner implements ImageSpriteProvider, GameStateProvider,
 
     const boxStyles = window.getComputedStyle(this.outerContainerEl);
     const padding = Number(
-        boxStyles.paddingLeft.substr(0, boxStyles.paddingLeft.length - 2));
+        boxStyles.paddingLeft.slice(0, -2));
 
     this.dimensions.width = this.outerContainerEl.offsetWidth - padding * 2;
     if (this.isArcadeMode()) {
@@ -1092,10 +1114,8 @@ export class Runner implements ImageSpriteProvider, GameStateProvider,
     document.addEventListener(RunnerEvents.POINTERDOWN, this);
     document.addEventListener(RunnerEvents.POINTERUP, this);
 
-    if (this.isArcadeMode()) {
-      // Gamepad
-      window.addEventListener(RunnerEvents.GAMEPADCONNECTED, this);
-    }
+    // Gamepad: habilitado siempre (no solo en arcade mode)
+    window.addEventListener(RunnerEvents.GAMEPADCONNECTED, this);
   }
 
   /**
@@ -1394,6 +1414,7 @@ export class Runner implements ImageSpriteProvider, GameStateProvider,
 
     this.stop();
     this.crashed = true;
+    this.containerEl?.classList.add(RunnerClasses.CRASHED);
     this.distanceMeter.achievement = false;
 
     this.tRex.update(100, TrexStatus.CRASHED);
@@ -1519,6 +1540,11 @@ export class Runner implements ImageSpriteProvider, GameStateProvider,
    * Whether the game should go into arcade mode.
    */
   private isArcadeMode(): boolean {
+    // Modo original de Chrome: el título empieza por "chrome://dino/".
+    // Modo standalone: se activa añadiendo ?arcade en la URL.
+    if (new URLSearchParams(window.location.search).has('arcade')) {
+      return true;
+    }
     // In RTL languages the title is wrapped with the left to right mark
     // control characters &#x202A; and &#x202C but are invisible.
     return document.title.startsWith(ARCADE_MODE_URL, IS_RTL ? 1 : 0);
