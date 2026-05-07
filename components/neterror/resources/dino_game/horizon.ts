@@ -1,7 +1,8 @@
 // Copyright 2024 The Chromium Authors
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import {assert} from 'chrome://resources/js/assert.js';
+// Reemplazado: el original importa de 'chrome://resources/js/assert.js'
+import {assert} from '../mocks/assert.js';
 
 import {BackgroundEl, getGlobalConfig as getBackgroundElGlobalConfig, setGlobalConfig as setBackgroundElGlobalConfig} from './background_el.js';
 import {Cloud} from './cloud.js';
