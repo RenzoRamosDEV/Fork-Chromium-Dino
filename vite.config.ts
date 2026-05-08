@@ -30,7 +30,8 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '../game': path.resolve(__dirname, 'src/game'),
+      // Alias legacy usados por los tests unitarios del motor del juego original
+      '../game': path.resolve(__dirname, 'src/core'),
       '../mocks': path.resolve(__dirname, 'src/mocks'),
     },
   },

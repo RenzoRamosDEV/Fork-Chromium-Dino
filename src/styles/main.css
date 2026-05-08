@@ -1,0 +1,710 @@
+/* Estilos standalone del juego del dinosaurio.
+   Extrae y adapta solo las reglas necesarias de neterror.css,
+   eliminando todo lo relacionado con la página de error de Chrome. */
+
+/* ─── Reset y base ───────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background-color: #fff;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* Soporte para modo oscuro del sistema operativo */
+  color-scheme: light dark;
+}
+
+/* Modo oscuro: invierte el fondo igual que lo hace Chrome */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #323232;
+    color: #fff;
+  }
+}
+
+/* ─── Contenedor principal del juego ─────────────────────────────────────── */
+/* Runner crea dinámicamente un div con la clase .runner-container dentro de
+   .interstitial-wrapper. Aquí definimos sus dimensiones y posición. */
+.runner-container {
+  height: 150px;
+  max-width: 600px;
+  overflow: hidden;
+  position: relative;
+  width: 44px; /* Empieza con el ancho del dino; se expande con la animación de intro */
+}
+
+/* Canvas donde se dibuja todo el juego */
+.runner-canvas {
+  height: 150px;
+  max-width: 600px;
+  opacity: 1;
+}
+
+/* ─── Icono offline (necesario en el DOM pero oculto en standalone) ───────── */
+/* Runner busca .icon-offline y lo oculta al iniciar; debe existir en el HTML */
+.icon-offline {
+  display: none;
+}
+
+/* ─── Animación de modo invertido (noche) ────────────────────────────────── */
+/* Runner añade la clase 'inverted' al <html> para activar el modo noche */
+html.inverted,
+html.inverted body {
+  background-color: #323232;
+}
+
+html.inverted .runner-canvas {
+  filter: invert(1);
+}
+
+/* ─── Estado crashed: sin cambios visuales extra, el sprite ya cambia ──────── */
+
+/* ─── Controlador táctil ──────────────────────────────────────────────────── */
+/* Runner crea un div .controller sobre toda la pantalla al jugar en móvil.
+   dvh (dynamic viewport height) evita el solapamiento con las barras del
+   navegador en Safari iOS; navegadores sin soporte dvh usan el fallback 100vh. */
+.controller {
+  height: 100vh;
+  height: 100dvh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  width: 100dvw;
+  z-index: 1;
+}
+
+/* ─── Región live para accesibilidad (lectores de pantalla) ──────────────── */
+.offline-runner-live-region {
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}
+
+/* ─── Toggle de velocidad lenta (accesibilidad) ──────────────────────────── */
+.slow-speed-option {
+  align-items: center;
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.slow-speed-option.hidden {
+  display: none;
+}
+
+/* ─── Utilidad hidden usada por Runner ───────────────────────────────────── */
+/* Runner usa HIDDEN_CLASS = 'hidden' para mostrar/ocultar el touchController */
+.hidden {
+  display: none !important;
+}
+
+/* ─── Modo arcade (chrome://dino) ────────────────────────────────────────── */
+/* Solo se activa si el título de la página empieza con "chrome://dino/" */
+body.arcade-mode {
+  margin: 0;
+}
+
+body.arcade-mode .runner-container {
+  margin: 0 auto;
+}
+
+/* ─── Recursos ocultos (sprites e imágenes del juego) ───────────────────── */
+/* Estos elementos solo existen para que Runner los lea; no deben ser visibles */
+#offline-resources {
+  display: none;
+}
+
+/* ─── Wrapper del juego ──────────────────────────────────────────────────── */
+/* width:100% es necesario para que Runner calcule correctamente dimensions.width.
+   Runner lee outerContainerEl.offsetWidth; sin width explícito el flex column
+   shrinks al tamaño del runner-container (44px) y el juego no se expande. */
+.interstitial-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 80px;
+}
+
+/* ─── Columnas laterales decorativas ─────────────────────────────────────── */
+.side-col {
+  position: fixed;
+  top: 0;
+  width: calc((100vw - 700px) / 2);
+  height: 100vh;
+  overflow: hidden;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.side-col-left  { left: 0; }
+.side-col-right { right: 0; }
+
+.side-col img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: invert(1);
+}
+
+/* ─── Leaderboard global ─────────────────────────────────────────────────── */
+#leaderboard-panel {
+  position: fixed;
+  right: calc((100vw - 700px) / 2 - 220px);
+  top: 24px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+#profile-login-wrap {
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  padding: 10px 12px;
+  backdrop-filter: blur(4px);
+}
+
+#leaderboard-inner {
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  padding: 12px;
+  backdrop-filter: blur(4px);
+}
+
+#leaderboard-title {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #aaa;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.lb-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.lb-rank {
+  font-size: 10px;
+  color: #666;
+  width: 14px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.lb-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.lb-avatar-placeholder {
+  background: #404040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #666;
+}
+
+.lb-name {
+  flex: 1;
+  font-size: 11px;
+  color: #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lb-score {
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  color: #ddd;
+  flex-shrink: 0;
+}
+
+/* ─── Panel de perfil ────────────────────────────────────────────────────── */
+#profile-panel {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  z-index: 10;
+}
+
+#profile-avatar-section {
+  flex-shrink: 0;
+  display: flex;
+}
+
+#profile-avatar-wrap {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #404040;
+  border: 2px solid #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#profile-avatar-wrap:hover {
+  border-color: #888;
+}
+
+#profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+#profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+#profile-avatar-placeholder {
+  font-size: 32px;
+  color: #888;
+  user-select: none;
+}
+
+#profile-upload-file {
+  display: none;
+}
+
+#profile-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 2px;
+}
+
+#profile-name-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #555;
+  color: #ddd;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 4px 2px;
+  outline: none;
+  width: 100%;
+}
+
+#profile-name-input::placeholder {
+  color: #555;
+  font-weight: normal;
+}
+
+#profile-score-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #888;
+  margin-top: 4px;
+}
+
+#profile-score {
+  font-size: 40px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  color: #ddd;
+  letter-spacing: 4px;
+  line-height: 1;
+}
+
+#profile-last-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #888;
+  margin-top: 4px;
+}
+
+#profile-last-score {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  color: #888;
+  letter-spacing: 3px;
+  line-height: 1;
+}
+
+/* ─── Login con código ───────────────────────────────────────────────────── */
+#profile-login-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#profile-login-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 0;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+#profile-login-btn:hover {
+  border-color: #888;
+  color: #ccc;
+}
+
+#profile-login-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#profile-login-input {
+  background: #404040;
+  border: none;
+  border-radius: 4px;
+  color: #ddd;
+  font-size: 10px;
+  font-family: 'Courier New', monospace;
+  padding: 4px 8px;
+  width: 220px;
+  outline: none;
+}
+
+#profile-login-submit {
+  background: #404040;
+  border: none;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 10px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+#profile-login-submit:hover {
+  background: #505050;
+  color: #fff;
+}
+
+#profile-login-msg {
+  font-size: 10px;
+  color: #888;
+}
+
+/* ─── Barra de código de perfil ──────────────────────────────────────────── */
+#profile-code-bar {
+  position: fixed;
+  top: 178px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+#profile-code-label {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #c0392b;
+  flex-shrink: 0;
+}
+
+#profile-code-value {
+  font-size: 9px;
+  font-family: 'Courier New', monospace;
+  color: #555;
+  letter-spacing: 1px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#profile-code-copy {
+  background: #2a2a2a;
+  border: none;
+  border-radius: 3px;
+  color: #888;
+  font-size: 9px;
+  padding: 2px 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#profile-code-copy:hover {
+  background: #404040;
+  color: #fff;
+}
+
+/* ─── Panel de color ─────────────────────────────────────────────────────── */
+#color-panel {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 600px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  color: #ccc;
+  user-select: none;
+}
+
+#cp-header {
+  background: transparent;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #aaa;
+}
+
+#cp-body {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+}
+
+#cp-left {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+#cp-gradient-wrap {
+  position: relative;
+  width: 280px;
+  height: 140px;
+  cursor: crosshair;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#cp-gradient {
+  display: block;
+  width: 100%;
+  height: 140px;
+}
+
+#cp-grad-cursor {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 0 2px rgba(0,0,0,0.6);
+}
+
+#cp-hue-wrap {
+  position: relative;
+  width: 18px;
+  height: 140px;
+  cursor: ns-resize;
+  border-radius: 4px;
+  overflow: visible;
+}
+
+#cp-hue {
+  display: block;
+  width: 18px;
+  height: 140px;
+  border-radius: 4px;
+}
+
+#cp-hue-cursor {
+  position: absolute;
+  width: 22px;
+  height: 6px;
+  border: 2px solid #fff;
+  border-radius: 2px;
+  left: -2px;
+  pointer-events: none;
+  box-shadow: 0 0 2px rgba(0,0,0,0.6);
+}
+
+#cp-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.cp-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.cp-label {
+  font-size: 10px;
+  color: #888;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.cp-label-hex {
+  background: #404040;
+  color: #aaa;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.cp-ch {
+  font-size: 10px;
+  color: #aaa;
+  width: 10px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+#cp-right input[type="number"],
+#cp-right input[type="text"] {
+  background: #404040;
+  border: none;
+  border-radius: 3px;
+  color: #ddd;
+  font-size: 13px;
+  text-align: center;
+  padding: 3px 2px;
+  width: 42px;
+  outline: none;
+}
+
+#cp-right input[type="number"]:focus,
+#cp-right input[type="text"]:focus {
+  background: #505050;
+}
+
+#cp-hex {
+  width: 58px !important;
+  font-size: 11px !important;
+  text-align: left !important;
+  padding-left: 4px !important;
+}
+
+.cp-hex-row {
+  margin-top: 4px;
+  gap: 6px;
+  justify-content: center;
+}
+
+#cp-preview {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background: #0066cc;
+  border: 1px solid #444;
+  flex-shrink: 0;
+}
+
+#cp-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+#cp-reset,
+#cp-especial {
+  background: #404040;
+  border: none;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 12px;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#cp-reset:hover,
+#cp-especial:hover:not(:disabled) {
+  background: #505050;
+  color: #fff;
+}
+
+#cp-especial:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+#cp-especial.rainbow-active {
+  background: linear-gradient(135deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+  background-size: 200% 200%;
+  animation: rainbow-btn 2s linear infinite;
+  color: #fff;
+  font-weight: bold;
+}
+
+@keyframes rainbow-btn {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Ocultar el panel de color en modo arcade */
+body.arcade-mode #color-panel {
+  display: none;
+}
+
+/* ─── Móvil / pantallas pequeñas ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .runner-container {
+    max-width: 100vw;
+  }
+
+  .runner-canvas {
+    max-width: 100vw;
+  }
+
+  /* Reduce el texto del toggle de velocidad para pantallas muy pequeñas */
+  .slow-speed-option {
+    font-size: 11px;
+  }
+}
