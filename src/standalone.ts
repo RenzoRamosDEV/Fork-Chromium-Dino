@@ -4,6 +4,7 @@
 
 import {Runner} from './game/offline.js';
 import {loadTimeData} from './mocks/load_time_data.js';
+import {initColorPicker} from './color-picker.js';
 
 // ─── Declaraciones de tipos para propiedades de Window usadas en offline.ts ──
 // En el build original estas las declaraba neterror.ts; al no usarlo, las
@@ -97,4 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // para que el juego sincronice desde el primer crash.
   const savedScore = parseInt(localStorage.getItem('dino-high-score') ?? '0', 10);
   window.initializeEasterEggHighScore(savedScore);
+
+  initColorPicker();
 });
