@@ -36,18 +36,72 @@
     <img src="images/side-pattern.jpg" alt="">
   </div>
 
-  <!-- Leaderboard global -->
-  <div id="leaderboard-panel">
+  <!-- Cards informativas izquierda -->
+  <div id="login-info-panel">
+
+    <div class="info-card">
+      <div class="info-card-title"><strong>🔑 Cómo Guardar y Recuperar tu Progreso</strong></div>
+      <div class="info-card-body">
+        <p>Dinochorme no usa contraseñas. Todo tu progreso se guarda en tu <strong>Código de Perfil</strong>. Sigue estos pasos para no perder tus datos:</p>
+        <ol>
+          <li><strong>Copia tu código:</strong> Lo encontrarás en la parte inferior de tu perfil. Solo haz clic en el botón "Copiar".</li>
+          <li><strong>Guárdalo bien:</strong> Pégalo en un lugar seguro (notas del celular, un mensaje, etc.).</li>
+          <li><strong>Inicia sesión en otro dispositivo:</strong> Selecciona "Login con código", pega tu clave y ¡listo! Recuperarás todos tus datos al instante.</li>
+        </ol>
+        <p class="info-card-warn">⚠️ <strong>¡Importante!</strong> No compartas tu código con nadie. Quien lo tenga podrá entrar a tu cuenta.</p>
+      </div>
+    </div>
+
+    <!-- Formulario de login siempre visible -->
     <div id="profile-login-wrap">
-      <button id="profile-login-btn">🔑 LOGIN CON CÓDIGO</button>
-      <div id="profile-login-form" style="display:none">
+      <div id="profile-login-title">🔑 LOGIN CON CÓDIGO</div>
+      <div id="profile-login-form">
         <input id="profile-login-input" type="text" placeholder="Pega tu código aquí...">
         <button id="profile-login-submit">Entrar</button>
-        <span id="profile-login-msg"></span>
+      </div>
+      <span id="profile-login-msg"></span>
+    </div>
+
+    <div class="info-card info-card-dino">
+      <div class="info-card-title"><strong>🦕 Curiosidades del juego del Dino de Chrome</strong></div>
+      <div class="info-card-body">
+
+        <p class="dino-section-title">📅 El origen: "la era prehistórica"</p>
+        <p>Desarrollado en <strong>2014</strong> por el equipo de UX de Google para Chrome, con participación de <strong>Sebastien Gabriel</strong>, <strong>Alan Bettes</strong> y <strong>Edward Jung</strong>.</p>
+        <p>La idea era convertir el mensaje de "sin conexión" en una pequeña distracción, como si quedarse sin internet fuera retroceder al pasado. Su nombre interno fue <strong>Project Bolan</strong>, en homenaje a <strong>Marc Bolan</strong>.</p>
+        <p>Apareció por primera vez en <strong>septiembre de 2014</strong> y fue relanzado en <strong>diciembre de 2014</strong> tras reescribir parte del código para mejorar el rendimiento en Android.</p>
+
+        <p class="dino-section-title">🎨 Personajes y estilo</p>
+        <p>Se eligió un estilo <strong>pixel art minimalista</strong> con animaciones inspiradas en videojuegos clásicos. El protagonista es el <em>Lonely T-Rex</em>, un tiranosaurio que corre por el desierto evitando cactus y pterodáctilos. La intención era que el error de "No hay Internet" se sintiera menos frustrante.</p>
+
+        <p class="dino-section-title">🤯 Datos curiosos</p>
+        <ul class="dino-plus-list">
+          <li>El juego fue diseñado para alcanzar su puntuación máxima tras aproximadamente <strong>17 millones de años</strong> de juego continuo.</li>
+          <li>Según el equipo de Chrome, se juegan unas <strong>270 millones de partidas al mes</strong>.</li>
+          <li>En 2021, durante los <strong>Tokyo 2020 Olympics</strong>, se lanzó una versión especial con disciplinas como surf, natación y gimnasia.</li>
+        </ul>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Leaderboard global -->
+  <div id="leaderboard-panel">
+    <div class="info-card">
+      <div class="info-card-title"><strong>🏆 Cómo aparecer en la Tabla de Puntuaciones</strong></div>
+      <div class="info-card-body">
+        <p>Para que tus récords sean públicos y puedas competir con otros, asegúrate de cumplir con lo siguiente:</p>
+        <ul>
+          <li><strong>Nombre Obligatorio:</strong> Debes asignar un nombre a tu perfil (ej. AndreaGames).</li>
+          <li><strong>Imagen de Avatar:</strong> Puedes elegir la imagen que prefieras para personalizar tu avatar.</li>
+          <li><strong>Tu Mejor Marca:</strong> La tabla siempre mostrará automáticamente tu <strong>Mejor Puntuación</strong> histórica, no la última partida jugada.</li>
+          <li><strong>Top Jugadores:</strong> La tabla solo mostrara a los mejores 15 jugadores con mayor puntuación.</li>
+        </ul>
       </div>
     </div>
     <div id="leaderboard-inner">
-      <div id="leaderboard-title">🏆 TOP JUGADORES</div>
+      <div id="leaderboard-title">🏆 TOP 15 JUGADORES</div>
       <div id="leaderboard-list"></div>
     </div>
   </div>
@@ -160,7 +214,10 @@
       </div>
       <div id="cp-actions">
         <button id="cp-reset">Reset</button>
-        <button id="cp-especial">Especial</button>
+        <div class="especial-wrap">
+          <button id="cp-especial">Especial</button>
+          <div class="especial-tooltip">🔒 Necesitas 5000 puntos para desbloquear</div>
+        </div>
       </div>
     </div>
   </div>

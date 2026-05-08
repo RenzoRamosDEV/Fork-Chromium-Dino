@@ -61,6 +61,20 @@ export function initRainbowMode() {
 
   updateButtonState();
 
+  // Tooltip "necesitas 5000 puntos"
+  const tooltip = document.querySelector('.especial-tooltip') as HTMLElement;
+  if (tooltip) {
+    btn.addEventListener('mouseenter', () => {
+      if (btn.disabled) {
+        tooltip.style.display = 'block';
+        const rect = btn.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+        tooltip.style.top = `${rect.top - tooltip.offsetHeight - 8}px`;
+      }
+    });
+    btn.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+  }
+
   // Recheck cuando cambia el high score
   const observer = new MutationObserver(updateButtonState);
   observer.observe(document.getElementById('profile-score')!, { childList: true, characterData: true, subtree: true });

@@ -53,7 +53,7 @@ export async function loadLeaderboard() {
     .from('scores')
     .select('nombre, avatar_url, score')
     .order('score', { ascending: false })
-    .limit(10);
+    .limit(15);
 
   if (error) console.error('Supabase load error:', error);
 
