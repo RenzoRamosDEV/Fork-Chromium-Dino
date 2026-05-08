@@ -5,8 +5,8 @@ import {defineConfig} from 'vitest/config';
 import path from 'path';
 
 export default defineConfig({
-  // Raíz del proyecto: donde vive index.html y los archivos del juego.
-  // Todas las rutas relativas de Vite parten desde aquí.
+  base: '/Fork-Chromium-Dino/',
+
   root: path.resolve(__dirname, 'src'),
 
   build: {
