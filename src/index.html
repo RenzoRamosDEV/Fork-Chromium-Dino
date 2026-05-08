@@ -5,14 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- color-scheme avisa al navegador del soporte dark/light para evitar flash -->
   <meta name="color-scheme" content="light dark">
-  <meta name="description" content="El juego del dinosaurio de Chrome — jugable offline sin conexión a internet.">
+  <meta name="description" content="Dinochorme — la versión custom del dino de Chrome hecha por Renzo. Compite en el leaderboard global, personaliza tu perfil y desbloquea el modo rainbow.">
+  <meta name="author" content="Renzo">
+  <meta name="keywords" content="dinochorme, dino game, chrome dinosaur, juego dinosaurio, renzo, leaderboard, offline game">
+
   <!-- Open Graph para compartir en redes sociales -->
-  <meta property="og:title" content="Dino Game">
-  <meta property="og:description" content="El juego del dinosaurio de Chrome — jugable offline sin conexión a internet.">
+  <meta property="og:title" content="Dinochorme">
+  <meta property="og:description" content="La versión custom del dino de Chrome hecha por Renzo. Compite en el leaderboard global y desbloquea el modo rainbow.">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dinochorme by Renzo">
+  <meta property="og:image" content="images/default_100_percent/offline/100-offline-sprite.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Dinochorme">
+  <meta name="twitter:description" content="La versión custom del dino de Chrome hecha por Renzo. Compite en el leaderboard global y desbloquea el modo rainbow.">
+  <meta name="twitter:image" content="images/default_100_percent/offline/100-offline-sprite.png">
+
   <!-- Favicon: sprite del dino recortado del sprite sheet del juego -->
   <link rel="icon" type="image/png" href="images/default_100_percent/offline/100-offline-sprite.png">
-  <title>Dino Game</title>
+  <title>Dinochorme</title>
   <link rel="stylesheet" href="standalone.css">
 </head>
 <body>
@@ -22,6 +34,22 @@
   </div>
   <div class="side-col side-col-right">
     <img src="images/side-pattern.jpg" alt="">
+  </div>
+
+  <!-- Leaderboard global -->
+  <div id="leaderboard-panel">
+    <div id="profile-login-wrap">
+      <button id="profile-login-btn">🔑 LOGIN CON CÓDIGO</button>
+      <div id="profile-login-form" style="display:none">
+        <input id="profile-login-input" type="text" placeholder="Pega tu código aquí...">
+        <button id="profile-login-submit">Entrar</button>
+        <span id="profile-login-msg"></span>
+      </div>
+    </div>
+    <div id="leaderboard-inner">
+      <div id="leaderboard-title">🏆 TOP JUGADORES</div>
+      <div id="leaderboard-list"></div>
+    </div>
   </div>
 
   <!--
@@ -45,6 +73,11 @@
       <div id="profile-last-label">ÚLTIMA PUNTUACIÓN</div>
       <div id="profile-last-score">00000</div>
     </div>
+  </div>
+  <div id="profile-code-bar">
+    <span id="profile-code-label">⚠️ NO COMPARTAS TU CÓDIGO DE PERFIL</span>
+    <span id="profile-code-value">—</span>
+    <button id="profile-code-copy">Copiar</button>
   </div>
 
   <div class="interstitial-wrapper">

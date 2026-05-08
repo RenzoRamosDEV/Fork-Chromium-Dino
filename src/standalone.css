@@ -165,6 +165,90 @@ body.arcade-mode .runner-container {
   filter: invert(1);
 }
 
+/* ─── Leaderboard global ─────────────────────────────────────────────────── */
+#leaderboard-panel {
+  position: fixed;
+  right: calc((100vw - 700px) / 2 - 220px);
+  top: 24px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+#profile-login-wrap {
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  padding: 10px 12px;
+  backdrop-filter: blur(4px);
+}
+
+#leaderboard-inner {
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  padding: 12px;
+  backdrop-filter: blur(4px);
+}
+
+#leaderboard-title {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #aaa;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.lb-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.lb-rank {
+  font-size: 10px;
+  color: #666;
+  width: 14px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.lb-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.lb-avatar-placeholder {
+  background: #404040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #666;
+}
+
+.lb-name {
+  flex: 1;
+  font-size: 11px;
+  color: #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lb-score {
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  color: #ddd;
+  flex-shrink: 0;
+}
+
 /* ─── Panel de perfil ────────────────────────────────────────────────────── */
 #profile-panel {
   position: fixed;
@@ -276,6 +360,117 @@ body.arcade-mode .runner-container {
   color: #888;
   letter-spacing: 3px;
   line-height: 1;
+}
+
+/* ─── Login con código ───────────────────────────────────────────────────── */
+#profile-login-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#profile-login-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 0;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+#profile-login-btn:hover {
+  border-color: #888;
+  color: #ccc;
+}
+
+#profile-login-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#profile-login-input {
+  background: #404040;
+  border: none;
+  border-radius: 4px;
+  color: #ddd;
+  font-size: 10px;
+  font-family: 'Courier New', monospace;
+  padding: 4px 8px;
+  width: 220px;
+  outline: none;
+}
+
+#profile-login-submit {
+  background: #404040;
+  border: none;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 10px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+#profile-login-submit:hover {
+  background: #505050;
+  color: #fff;
+}
+
+#profile-login-msg {
+  font-size: 10px;
+  color: #888;
+}
+
+/* ─── Barra de código de perfil ──────────────────────────────────────────── */
+#profile-code-bar {
+  position: fixed;
+  top: 178px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+#profile-code-label {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #c0392b;
+  flex-shrink: 0;
+}
+
+#profile-code-value {
+  font-size: 9px;
+  font-family: 'Courier New', monospace;
+  color: #555;
+  letter-spacing: 1px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#profile-code-copy {
+  background: #2a2a2a;
+  border: none;
+  border-radius: 3px;
+  color: #888;
+  font-size: 9px;
+  padding: 2px 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#profile-code-copy:hover {
+  background: #404040;
+  color: #fff;
 }
 
 /* ─── Panel de color ─────────────────────────────────────────────────────── */
