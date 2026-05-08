@@ -12,6 +12,7 @@ El juego del dinosaurio de Chrome cuando no hay internet. Esta versión lo extra
 ## URL
 
 https://renzoramosdev.github.io/Fork-Chromium-Dino/
+
 ---
 
 ## Stack técnico
