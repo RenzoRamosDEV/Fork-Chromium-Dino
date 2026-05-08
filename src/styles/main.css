@@ -168,9 +168,10 @@ body.arcade-mode .runner-container {
 /* ─── Panel informativo izquierdo (2 cards) ──────────────────────────────── */
 #login-info-panel {
   position: fixed;
-  left: calc((100vw - 700px) / 2 - 540px);
+  left: max(16px, calc((100vw - 700px) / 2 - 736px));
   top: 24px;
-  width: 510px;
+  width: min(calc((100vw - 700px) / 2 - 32px), 720px);
+  min-width: 260px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -223,7 +224,7 @@ body.arcade-mode .runner-container {
 }
 
 .dino-plus-list li::before {
-  content: "+ ";
+  content: "• ";
   color: #aaa;
   font-weight: bold;
 }
@@ -246,9 +247,10 @@ body.arcade-mode .runner-container {
 /* ─── Leaderboard global ─────────────────────────────────────────────────── */
 #leaderboard-panel {
   position: fixed;
-  right: calc((100vw - 700px) / 2 - 540px);
+  right: max(16px, calc((100vw - 700px) / 2 - 736px));
   top: 24px;
-  width: 510px;
+  width: min(calc((100vw - 700px) / 2 - 32px), 720px);
+  min-width: 260px;
   display: flex;
   flex-direction: column;
   gap: 8px;
