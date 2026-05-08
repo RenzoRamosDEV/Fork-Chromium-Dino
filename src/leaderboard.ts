@@ -69,7 +69,7 @@ export function initLeaderboard() {
   // Actualizar leaderboard en tiempo real
   supabase
     .channel('scores')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'scores' }, loadLeaderboard)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'scores' }, loadLeaderboard)
     .subscribe();
 
   // Guardar score al morir
