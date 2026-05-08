@@ -22,6 +22,24 @@
     Runner.initializeInstance('.interstitial-wrapper') inyecta aquí
     el div .runner-container con el canvas del juego.
   -->
+  <!-- Sección de perfil y puntuación -->
+  <div id="profile-panel">
+    <div id="profile-avatar-section">
+      <div id="profile-avatar-wrap">
+        <img id="profile-avatar" src="" alt="Avatar">
+        <div id="profile-avatar-placeholder">?</div>
+        <input id="profile-upload-file" type="file" accept="image/*">
+      </div>
+    </div>
+    <div id="profile-info">
+      <input id="profile-name-input" type="text" placeholder="Tu nombre..." maxlength="24">
+      <div id="profile-score-label">MEJOR PUNTUACIÓN</div>
+      <div id="profile-score">00000</div>
+      <div id="profile-last-label">ÚLTIMA PUNTUACIÓN</div>
+      <div id="profile-last-score">00000</div>
+    </div>
+  </div>
+
   <div class="interstitial-wrapper">
     <!--
       Elemento requerido por Runner.init(): busca '.icon-offline' y lo oculta.
@@ -61,11 +79,6 @@
     </template>
   </div>
 
-  <!--
-    Entry point del juego.
-    Vite resuelve standalone.ts → standalone.js al compilar.
-    En modo dev sirve el TypeScript directamente vía esbuild.
-  -->
   <!-- Panel de color para filtrar el sprite del dinosaurio -->
   <div id="color-panel">
     <div id="cp-header">COLOR DEL JUEGO</div>

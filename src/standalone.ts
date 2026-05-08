@@ -5,6 +5,7 @@
 import {Runner} from './game/offline.js';
 import {loadTimeData} from './mocks/load_time_data.js';
 import {initColorPicker} from './color-picker.js';
+import {initProfile} from './profile.js';
 
 // ─── Declaraciones de tipos para propiedades de Window usadas en offline.ts ──
 // En el build original estas las declaraba neterror.ts; al no usarlo, las
@@ -70,6 +71,8 @@ loadTimeData.data = {
 window.errorPageController = {
   updateEasterEggHighScore(score: number) {
     localStorage.setItem('dino-high-score', String(score));
+    const el = document.getElementById('profile-score');
+    if (el) el.textContent = String(Math.round(score * 0.025)).padStart(5, '0');
   },
   resetEasterEggHighScore() {
     localStorage.removeItem('dino-high-score');
@@ -99,5 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedScore = parseInt(localStorage.getItem('dino-high-score') ?? '0', 10);
   window.initializeEasterEggHighScore(savedScore);
 
+  (window as any).Runner = Runner;
+
   initColorPicker();
+  initProfile();
 });
