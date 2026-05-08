@@ -152,7 +152,8 @@ body.arcade-mode .runner-container {
   background: transparent;
   border-radius: 8px;
   overflow: hidden;
-  width: 380px;
+  width: 100%;
+  max-width: 600px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   color: #ccc;
@@ -182,7 +183,7 @@ body.arcade-mode .runner-container {
 
 #cp-gradient-wrap {
   position: relative;
-  width: 160px;
+  width: 280px;
   height: 140px;
   cursor: crosshair;
   border-radius: 4px;
@@ -191,7 +192,7 @@ body.arcade-mode .runner-container {
 
 #cp-gradient {
   display: block;
-  width: 160px;
+  width: 100%;
   height: 140px;
 }
 
@@ -257,9 +258,9 @@ body.arcade-mode .runner-container {
 .cp-label-hex {
   background: #404040;
   color: #aaa;
-  padding: 2px 6px;
+  padding: 1px 4px;
   border-radius: 3px;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: bold;
   letter-spacing: 1px;
   white-space: nowrap;
@@ -279,10 +280,10 @@ body.arcade-mode .runner-container {
   border: none;
   border-radius: 3px;
   color: #ddd;
-  font-size: 11px;
+  font-size: 13px;
   text-align: center;
-  padding: 2px 2px;
-  width: 36px;
+  padding: 3px 2px;
+  width: 42px;
   outline: none;
 }
 
@@ -292,38 +293,50 @@ body.arcade-mode .runner-container {
 }
 
 #cp-hex {
-  width: 72px !important;
+  width: 58px !important;
+  font-size: 11px !important;
   text-align: left !important;
-  padding-left: 6px !important;
+  padding-left: 4px !important;
 }
 
 .cp-hex-row {
   margin-top: 4px;
   gap: 6px;
+  justify-content: center;
 }
 
 #cp-preview {
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
   border-radius: 3px;
   background: #0066cc;
   border: 1px solid #444;
   flex-shrink: 0;
 }
 
-#cp-reset {
-  margin-top: 4px;
-  background: #404040;
-  border: none;
-  border-radius: 3px;
-  color: #aaa;
-  font-size: 10px;
-  padding: 3px 10px;
-  cursor: pointer;
-  width: 100%;
+#cp-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
-#cp-reset:hover {
+#cp-reset,
+#cp-especial {
+  background: #404040;
+  border: none;
+  border-radius: 4px;
+  color: #ccc;
+  font-size: 12px;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#cp-reset:hover,
+#cp-especial:hover {
   background: #505050;
   color: #fff;
 }

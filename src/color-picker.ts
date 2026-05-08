@@ -90,7 +90,10 @@ export function initColorPicker() {
   let hsv: HSV = { h: 210, s: 1, v: 0.8 };
 
   function drawGradient() {
-    const w = gradCanvas!.width, h = gradCanvas!.height;
+    const w = gradCanvas!.offsetWidth || gradCanvas!.width;
+    const h = gradCanvas!.offsetHeight || gradCanvas!.height;
+    gradCanvas!.width = w;
+    gradCanvas!.height = h;
     const hueColor = `hsl(${hsv.h}, 100%, 50%)`;
     const whiteGrad = gradCtx.createLinearGradient(0, 0, w, 0);
     whiteGrad.addColorStop(0, '#fff');
@@ -211,11 +214,13 @@ export function initColorPicker() {
   panel.querySelector('#cp-reset')?.addEventListener('click', () => {
     const canvas = document.querySelector<HTMLElement>('.runner-canvas');
     if (canvas) canvas.style.filter = '';
-    hsv = { h: 210, s: 1, v: 0.8 };
+    hsv = { h: 0, s: 0, v: 1 };
     update();
   });
 
   // ─── Init ─────────────────────────────────────────────────────────────────
   drawHue();
   update();
+
+  new ResizeObserver(() => update()).observe(gradCanvas!);
 }
