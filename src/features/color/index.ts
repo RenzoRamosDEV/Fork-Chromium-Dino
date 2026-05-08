@@ -87,7 +87,7 @@ export function initColorPicker() {
   const hueCursor = panel.querySelector<HTMLElement>('#cp-hue-cursor')!;
   const preview = panel.querySelector<HTMLElement>('#cp-preview')!;
 
-  let hsv: HSV = { h: 210, s: 1, v: 0.8 };
+  let hsv: HSV = { h: 0, s: 0, v: 1 };
 
   function drawGradient() {
     const w = gradCanvas!.offsetWidth || gradCanvas!.width;
