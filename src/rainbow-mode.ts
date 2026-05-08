@@ -1,4 +1,5 @@
 const RAINBOW_HI_REQUIRED = 2000;
+const EASTER_EGG_CODE = 'X180904250507X';
 const DISTANCE_COEFFICIENT = 0.025;
 
 let rainbowActive = false;
@@ -35,11 +36,18 @@ export function initRainbowMode() {
   const btn = document.getElementById('cp-especial') as HTMLButtonElement;
   if (!btn) return;
 
-  function updateButtonState() {
+  const nameInput = document.getElementById('profile-name-input') as HTMLInputElement;
+
+  function isUnlocked(): boolean {
     const raw = parseInt(localStorage.getItem('dino-high-score') || '0', 10);
     const hi = Math.round(raw * DISTANCE_COEFFICIENT);
-    btn.disabled = hi < RAINBOW_HI_REQUIRED;
-    if (btn.disabled && rainbowActive) {
+    return hi >= RAINBOW_HI_REQUIRED || nameInput?.value === EASTER_EGG_CODE;
+  }
+
+  function updateButtonState() {
+    const unlocked = isUnlocked();
+    btn.disabled = !unlocked;
+    if (!unlocked && rainbowActive) {
       stopRainbow();
       btn.classList.remove('rainbow-active');
     }
@@ -48,9 +56,11 @@ export function initRainbowMode() {
   updateButtonState();
 
   // Recheck cuando cambia el high score
-  const origUpdate = (window as any).errorPageController?.updateEasterEggHighScore;
   const observer = new MutationObserver(updateButtonState);
   observer.observe(document.getElementById('profile-score')!, { childList: true, characterData: true, subtree: true });
+
+  // Recheck cuando cambia el nombre
+  nameInput?.addEventListener('input', updateButtonState);
 
   btn.addEventListener('click', () => {
     if (btn.disabled) return;
