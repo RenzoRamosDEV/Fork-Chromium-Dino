@@ -694,7 +694,64 @@ body.arcade-mode #color-panel {
 }
 
 /* ─── Móvil / pantallas pequeñas ─────────────────────────────────────────── */
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+
+  /* El body pasa a flujo normal vertical y scrollable */
+  body {
+    display: block;
+    justify-content: unset;
+    align-items: unset;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Ocultar columnas decorativas laterales */
+  .side-col { display: none; }
+
+  /* ── Perfil: deja de ser fixed, fluye al top ── */
+  #profile-panel {
+    position: static;
+    transform: none;
+    width: 100%;
+    padding: 12px 16px 0;
+    gap: 12px;
+  }
+
+  #profile-avatar-wrap {
+    width: 64px;
+    height: 64px;
+  }
+
+  #profile-avatar-placeholder {
+    font-size: 24px;
+  }
+
+  #profile-score {
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+
+  #profile-last-score {
+    font-size: 18px;
+  }
+
+  /* ── Barra de código: deja de ser fixed ── */
+  #profile-code-bar {
+    position: static;
+    transform: none;
+    width: 100%;
+    padding: 6px 16px;
+    margin-top: 6px;
+  }
+
+  /* ── Zona del juego: centrada y full width ── */
+  .interstitial-wrapper {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+    padding: 8px 0;
+  }
+
   .runner-container {
     max-width: 100vw;
   }
@@ -703,7 +760,71 @@ body.arcade-mode #color-panel {
     max-width: 100vw;
   }
 
-  /* Reduce el texto del toggle de velocidad para pantallas muy pequeñas */
+  /* ── Leaderboard: deja de ser fixed, va debajo del juego ── */
+  #leaderboard-panel {
+    position: static;
+    transform: none;
+    width: calc(100% - 32px);
+    margin: 12px 16px 0;
+  }
+
+  /* ── Color picker: deja de ser fixed, va al final ── */
+  #color-panel {
+    position: static;
+    transform: none;
+    width: 100%;
+    margin-top: 12px;
+    padding-bottom: 24px;
+  }
+
+  /* Reorganizar el picker para que quepa en pantalla estrecha */
+  #cp-body {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  #cp-left {
+    width: 100%;
+    justify-content: center;
+  }
+
+  #cp-gradient-wrap {
+    width: calc(100vw - 80px);
+    height: 120px;
+    max-width: 280px;
+  }
+
+  #cp-gradient {
+    width: 100%;
+    height: 120px;
+  }
+
+  #cp-hue-wrap {
+    height: 120px;
+  }
+
+  #cp-hue {
+    height: 120px;
+  }
+
+  #cp-right {
+    display: none;
+  }
+
+  #cp-actions {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+  }
+
+  #cp-reset,
+  #cp-especial {
+    width: 80px;
+    height: 44px;
+    font-size: 12px;
+  }
+
   .slow-speed-option {
     font-size: 11px;
   }
