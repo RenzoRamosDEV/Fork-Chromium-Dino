@@ -8,6 +8,10 @@ Una versión personalizada y standalone del dinosaurio offline de Chrome, con le
 
 El juego del dinosaurio de Chrome cuando no hay internet. Esta versión lo extrae del navegador, lo convierte en una app web independiente con TypeScript + Vite, y le añade funcionalidades multijugador usando Supabase como backend.
 
+
+## URL
+
+https://renzoramosdev.github.io/Fork-Chromium-Dino/
 ---
 
 ## Stack técnico
