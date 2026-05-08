@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {CollisionBox} from '../../components/neterror/resources/dino_game/offline_sprite_definitions.js';
+import {CollisionBox} from '../game/offline_sprite_definitions.js';
 
 // Función AABB pura equivalente a la que usa checkForCollision internamente.
 // Dos cajas colisionan si se solapan en ambos ejes.
