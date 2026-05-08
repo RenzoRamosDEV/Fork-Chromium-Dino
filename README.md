@@ -174,8 +174,7 @@ requestAnimationFrame
 ### Modo arcoíris (easter egg)
 
 Se desbloquea si:
-- High score ≥ 2000 puntos, **O**
-- El nombre del jugador es `X180904250507X`
+- High score ≥ 5000 puntos o encuentras el codigo secreto
 
 Una vez activo, cicla el tono del dinosaurio continuamente en el game loop.
 
