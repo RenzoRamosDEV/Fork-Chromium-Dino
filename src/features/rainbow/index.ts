@@ -1,4 +1,10 @@
+// Modo rainbow: cicla el filtro hue-rotate del canvas en cada frame.
+// Se desbloquea al llegar a HI >= 2000 o escribiendo el easter egg en el nombre.
+// Se pausa automáticamente en game over y se reanuda al reiniciar.
+
+// HI mínimo para desbloquear el modo rainbow de forma normal
 const RAINBOW_HI_REQUIRED = 2000;
+// Nombre exacto que activa el easter egg sin necesidad de llegar al HI
 const EASTER_EGG_CODE = 'X180904250507X';
 const DISTANCE_COEFFICIENT = 0.025;
 
