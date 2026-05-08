@@ -45,6 +45,24 @@ test.describe('Dino Game — flujo principal', () => {
     expect(width).toBeGreaterThan(100);
   });
 
+  test('no arranca al pulsar Space mientras se escribe el nombre', async ({page}) => {
+    await page.evaluate(() => {
+      const input = document.getElementById('profile-name-input') as HTMLInputElement;
+      input.focus();
+      input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: ' ',
+        code: 'Space',
+        keyCode: 32,
+        bubbles: true,
+        cancelable: true,
+      }));
+    });
+
+    const isPlaying = await page.evaluate(
+        () => Boolean((window as any).Runner?.getInstance?.()?.playing));
+    expect(isPlaying).toBe(false);
+  });
+
   test('aparece game over al no esquivar un obstáculo', async ({page}) => {
     await startGame(page);
     await waitForCrash(page);
