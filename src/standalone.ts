@@ -6,6 +6,7 @@ import {Runner} from './game/offline.js';
 import {loadTimeData} from './mocks/load_time_data.js';
 import {initColorPicker} from './color-picker.js';
 import {initProfile} from './profile.js';
+import {initRainbowMode} from './rainbow-mode.js';
 
 // ─── Declaraciones de tipos para propiedades de Window usadas en offline.ts ──
 // En el build original estas las declaraba neterror.ts; al no usarlo, las
@@ -106,4 +107,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initColorPicker();
   initProfile();
+  initRainbowMode();
 });
