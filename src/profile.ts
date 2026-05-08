@@ -41,8 +41,11 @@ function updateScore() {
 
 export function initProfile() {
   const nameInput = document.getElementById('profile-name-input') as HTMLInputElement;
-  const urlInput = document.getElementById('profile-url-input') as HTMLInputElement;
+  const avatarWrap = document.getElementById('profile-avatar-wrap')!;
   const fileInput = document.getElementById('profile-upload-file') as HTMLInputElement;
+
+  // Clic en el cuadrado del avatar abre el selector de archivo
+  avatarWrap.addEventListener('click', () => fileInput.click());
 
   const profile = loadProfile();
 
@@ -56,17 +59,6 @@ export function initProfile() {
   nameInput.addEventListener('input', () => {
     profile.name = nameInput.value;
     saveProfile(profile);
-  });
-
-  // Avatar por URL al presionar Enter
-  urlInput.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter') return;
-    const url = urlInput.value.trim();
-    if (!url) return;
-    profile.avatarDataUrl = url;
-    saveProfile(profile);
-    setAvatar(url);
-    urlInput.value = '';
   });
 
   // Avatar por archivo
@@ -85,4 +77,39 @@ export function initProfile() {
 
   // Mostrar score guardado al cargar
   updateScore();
+
+  // Hacer el avatar cuadrado con el mismo alto que la columna de info
+  const info = document.getElementById('profile-info')!;
+  const wrap = document.getElementById('profile-avatar-wrap')!;
+  const syncSize = () => {
+    const h = info.offsetHeight;
+    wrap.style.width = `${h}px`;
+    wrap.style.height = `${h}px`;
+  };
+  requestAnimationFrame(syncSize);
+  new ResizeObserver(syncSize).observe(info);
+
+  // Detectar game over vía clase "crashed" y leer distanceRan del Runner
+  const waitForContainer = setInterval(() => {
+    const container = document.querySelector('.runner-container');
+    if (!container) return;
+    clearInterval(waitForContainer);
+
+    let wasCrashed = false;
+    new MutationObserver(() => {
+      const crashed = container.classList.contains('crashed');
+      if (crashed && !wasCrashed) {
+        wasCrashed = true;
+        try {
+          const runner = (window as any).Runner?.getInstance?.();
+          const raw = runner ? Math.ceil(runner.distanceRan) : 0;
+          const display = Math.round(raw * 0.025);
+          const lastEl = document.getElementById('profile-last-score');
+          if (lastEl) lastEl.textContent = String(display).padStart(5, '0');
+        } catch {}
+      } else if (!crashed) {
+        wasCrashed = false;
+      }
+    }).observe(container, { attributes: true, attributeFilter: ['class'] });
+  }, 200);
 }

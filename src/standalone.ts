@@ -102,6 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedScore = parseInt(localStorage.getItem('dino-high-score') ?? '0', 10);
   window.initializeEasterEggHighScore(savedScore);
 
+  (window as any).Runner = Runner;
+
   initColorPicker();
   initProfile();
 });

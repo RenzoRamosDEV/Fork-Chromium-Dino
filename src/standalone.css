@@ -153,30 +153,35 @@ body.arcade-mode .runner-container {
   display: flex;
   align-items: center;
   gap: 24px;
-  margin-bottom: 80px;
-  padding: 0 0 48px 0;
-  border-bottom: 1px solid #444;
+  margin-bottom: 32px;
+  padding: 0 0 24px 0;
 }
 
 #profile-avatar-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
   flex-shrink: 0;
+  display: flex;
 }
 
 #profile-avatar-wrap {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  border-radius: 8px;
   overflow: hidden;
   background: #404040;
   border: 2px solid #555;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  cursor: pointer;
+}
+
+#profile-avatar-wrap:hover {
+  border-color: #888;
+}
+
+#profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
 }
 
 #profile-avatar {
@@ -192,49 +197,6 @@ body.arcade-mode .runner-container {
   user-select: none;
 }
 
-#profile-avatar-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: center;
-}
-
-#profile-url-input {
-  background: #404040;
-  border: none;
-  border-radius: 4px;
-  color: #ccc;
-  font-size: 11px;
-  padding: 4px 8px;
-  width: 140px;
-  outline: none;
-}
-
-#profile-url-input::placeholder {
-  color: #666;
-}
-
-#profile-url-input:focus {
-  background: #505050;
-}
-
-#profile-upload-label {
-  background: #404040;
-  border-radius: 4px;
-  color: #ccc;
-  font-size: 11px;
-  padding: 4px 10px;
-  cursor: pointer;
-  width: 140px;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-#profile-upload-label:hover {
-  background: #505050;
-  color: #fff;
-}
-
 #profile-upload-file {
   display: none;
 }
@@ -243,7 +205,7 @@ body.arcade-mode .runner-container {
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 6px;
+  gap: 2px;
 }
 
 #profile-name-input {
@@ -267,7 +229,7 @@ body.arcade-mode .runner-container {
   font-size: 10px;
   letter-spacing: 2px;
   color: #888;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 #profile-score {
@@ -279,9 +241,25 @@ body.arcade-mode .runner-container {
   line-height: 1;
 }
 
+#profile-last-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #888;
+  margin-top: 4px;
+}
+
+#profile-last-score {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  color: #888;
+  letter-spacing: 3px;
+  line-height: 1;
+}
+
 /* ─── Panel de color ─────────────────────────────────────────────────────── */
 #color-panel {
-  margin-top: 80px;
+  margin-top: 32px;
   background: transparent;
   border-radius: 8px;
   overflow: hidden;
