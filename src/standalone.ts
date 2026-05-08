@@ -2,7 +2,7 @@
 // Reemplaza a neterror.ts, que dependía del sistema de error pages de Chrome.
 // Este archivo inicializa el juego directamente sin lógica de página de error.
 
-import {Runner} from './dino_game/offline.js';
+import {Runner} from './game/offline.js';
 import {loadTimeData} from './mocks/load_time_data.js';
 
 // ─── Declaraciones de tipos para propiedades de Window usadas en offline.ts ──

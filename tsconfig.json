@@ -13,6 +13,7 @@
     // Incluye tipos de DOM (HTMLElement, Canvas, AudioContext, etc.) y ES2020.
     // ES2022 incluye Array.at(), Object.hasOwn() y otras APIs usadas en horizon.ts
     "lib": ["ES2022", "DOM"],
+    "types": ["node"],
     // Permite importar módulos CommonJS como default imports (usado por algunos paquetes de Vite).
     "esModuleInterop": true,
     // Permite que archivos JS coexistan con TS sin error.
@@ -20,7 +21,8 @@
   },
   // Incluye todos los .ts del proyecto excepto los de distribución.
   "include": [
-    "components/**/*.ts",
+    "src/**/*.ts",
+    "tests/**/*.ts",
     "vite.config.ts"
   ],
   "exclude": [
