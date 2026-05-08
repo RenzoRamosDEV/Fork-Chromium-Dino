@@ -7,7 +7,7 @@ import path from 'path';
 export default defineConfig({
   // Raíz del proyecto: donde vive index.html y los archivos del juego.
   // Todas las rutas relativas de Vite parten desde aquí.
-  root: path.resolve(__dirname, 'components/neterror/resources'),
+  root: path.resolve(__dirname, 'src'),
 
   build: {
     // Carpeta de salida para `npm run build` (relativa a la raíz del proyecto,
@@ -26,6 +26,13 @@ export default defineConfig({
   preview: {
     // Puerto para `npm run preview` (sirve el build de producción localmente).
     port: 4173,
+  },
+
+  resolve: {
+    alias: {
+      '../game': path.resolve(__dirname, 'src/game'),
+      '../mocks': path.resolve(__dirname, 'src/mocks'),
+    },
   },
 
   test: {
