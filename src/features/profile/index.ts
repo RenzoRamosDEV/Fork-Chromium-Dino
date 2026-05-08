@@ -131,18 +131,11 @@ export function initProfile() {
   });
 
   // Login con código
-  const loginBtn    = document.getElementById('profile-login-btn')!;
-  const loginForm   = document.getElementById('profile-login-form')!;
   const loginInput  = document.getElementById('profile-login-input') as HTMLInputElement;
   const loginSubmit = document.getElementById('profile-login-submit')!;
   const loginMsg    = document.getElementById('profile-login-msg')!;
 
-  loginBtn.addEventListener('click', () => {
-    const visible = loginForm.style.display !== 'none';
-    loginForm.style.display = visible ? 'none' : 'flex';
-  });
-
-  loginSubmit.addEventListener('click', async () => {
+  async function doLogin() {
     const inputCode = loginInput.value.trim();
     if (!inputCode) return;
 
@@ -181,8 +174,12 @@ export function initProfile() {
 
     saveProfile(profile);
     loginMsg.textContent = '✅ Cuenta restaurada';
-    loginForm.style.display = 'none';
     loginInput.value = '';
+  }
+
+  loginSubmit.addEventListener('click', doLogin);
+  loginInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doLogin();
   });
 
   // Hacer el avatar cuadrado con el mismo alto que la columna de info
