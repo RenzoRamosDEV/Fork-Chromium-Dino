@@ -9,7 +9,7 @@ import {getRequiredElement} from 'chrome://resources/js/util.js';
 import {html, render} from 'chrome://resources/lit/v3_0/lit.rollup.js';
 
 import {HIDDEN_CLASS} from './constants.js';
-import {Runner} from './dino_game/offline.js';
+import {Runner} from './game/offline.js';
 
 declare global {
   interface Window {

@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {getRandomNum} from '../../components/neterror/resources/dino_game/utils.js';
+import {getRandomNum} from '../game/utils.js';
 
 describe('getRandomNum', () => {
   it('devuelve un entero dentro del rango [min, max]', () => {
