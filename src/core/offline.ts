@@ -1127,6 +1127,12 @@ export class Runner implements ImageSpriteProvider, GameStateProvider,
       e.preventDefault();
     }
 
+    if (e instanceof KeyboardEvent &&
+        e.target instanceof HTMLElement &&
+        e.target.id === 'profile-name-input') {
+      return;
+    }
+
     if (this.isCanvasInView()) {
       // Allow toggling of speed toggle.
       if (e instanceof KeyboardEvent &&
