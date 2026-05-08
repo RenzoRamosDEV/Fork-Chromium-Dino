@@ -1,5 +1,9 @@
-import { supabase } from './supabase-client.js';
+// Perfil del jugador: nombre, avatar, código único y visualización de scores.
+// El código de 90 caracteres identifica al jugador en Supabase y permite
+// recuperar la cuenta desde otro dispositivo usando "Login con código".
+import { supabase } from '../leaderboard/supabase.js';
 
+// Clave de localStorage donde se guarda el objeto de perfil serializado
 const STORAGE_KEY = 'dino_profile';
 
 interface Profile {
@@ -19,6 +23,8 @@ function saveProfile(profile: Profile) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
 }
 
+// Genera un código aleatorio de 90 caracteres alfanuméricos usando
+// crypto.getRandomValues para garantizar aleatoriedad criptográfica.
 function generateCode(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   return Array.from(crypto.getRandomValues(new Uint8Array(90)))
@@ -190,13 +196,15 @@ export function initProfile() {
   requestAnimationFrame(syncSize);
   new ResizeObserver(syncSize).observe(info);
 
-  // Detectar game over vía clase "crashed" y leer distanceRan del Runner
+  // Esperar a que el Runner cree el contenedor y luego observar game over
   const waitForContainer = setInterval(() => {
     const container = document.querySelector('.runner-container');
     if (!container) return;
     clearInterval(waitForContainer);
 
     let wasCrashed = false;
+
+    // Al detectar clase "crashed", leer distanceRan del Runner y mostrar última puntuación
     new MutationObserver(() => {
       const crashed = container.classList.contains('crashed');
       if (crashed && !wasCrashed) {
@@ -204,7 +212,7 @@ export function initProfile() {
         try {
           const runner = (window as any).Runner?.getInstance?.();
           const raw = runner ? Math.ceil(runner.distanceRan) : 0;
-          const display = Math.round(raw * 0.025);
+          const display = Math.round(raw * DISTANCE_COEFFICIENT);
           const lastEl = document.getElementById('profile-last-score');
           if (lastEl) lastEl.textContent = String(display).padStart(5, '0');
         } catch {}

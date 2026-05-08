@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 // ─── Mocks globales ───────────────────────────────────────────────────────────
 
 // Mock de supabase-client antes de importar profile
-vi.mock('../../src/supabase-client.js', () => ({
+vi.mock('../../src/features/leaderboard/supabase.js', () => ({
   supabase: {
     storage: {
       from: () => ({
@@ -41,7 +41,7 @@ Object.defineProperty(globalThis, 'crypto', {
   },
 });
 
-import { getPlayerCode } from '../../src/profile.js';
+import { getPlayerCode } from '../../src/features/profile/index.js';
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 

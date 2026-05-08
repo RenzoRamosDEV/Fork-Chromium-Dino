@@ -1,3 +1,5 @@
+// Cliente de Supabase compartido por leaderboard y profile.
+// La anon key es pública por diseño — solo tiene permisos acotados por RLS.
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = 'https://bdyvsejyqrpdkhsfydzj.supabase.co';

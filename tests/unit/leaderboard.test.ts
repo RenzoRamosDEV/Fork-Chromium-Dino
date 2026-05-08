@@ -28,7 +28,7 @@ let updateCalled = false;
 let insertPayload: any = null;
 let updatePayload: any = null;
 
-vi.mock('../../src/supabase-client.js', () => ({
+vi.mock('../../src/features/leaderboard/supabase.js', () => ({
   supabase: {
     from: (_table: string) => ({
       select: (_cols: string) => ({
@@ -66,7 +66,7 @@ function setupDOM(name = 'Renzo', avatarVisible = false) {
   `;
 }
 
-import { saveScore } from '../../src/leaderboard.js';
+import { saveScore } from '../../src/features/leaderboard/index.js';
 
 describe('saveScore', () => {
   beforeEach(() => {
