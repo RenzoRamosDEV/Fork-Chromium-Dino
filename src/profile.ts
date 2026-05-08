@@ -1,3 +1,5 @@
+import { supabase } from './supabase-client.js';
+
 const STORAGE_KEY = 'dino_profile';
 
 interface Profile {
@@ -15,6 +17,22 @@ function loadProfile(): Profile {
 
 function saveProfile(profile: Profile) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+}
+
+function generateCode(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  return Array.from(crypto.getRandomValues(new Uint8Array(90)))
+    .map(b => chars[b % chars.length])
+    .join('');
+}
+
+export function getPlayerCode(): string {
+  let code = localStorage.getItem('dino-player-code');
+  if (!code) {
+    code = generateCode();
+    localStorage.setItem('dino-player-code', code);
+  }
+  return code;
 }
 
 function setAvatar(dataUrl: string) {
@@ -61,22 +79,105 @@ export function initProfile() {
     saveProfile(profile);
   });
 
-  // Avatar por archivo
-  fileInput.addEventListener('change', () => {
+  // Avatar por archivo — sube al Storage de Supabase y guarda la URL pública
+  fileInput.addEventListener('change', async () => {
     const file = fileInput.files?.[0];
     if (!file) return;
+
+    // Mostrar preview local inmediato
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target?.result as string;
-      profile.avatarDataUrl = dataUrl;
-      saveProfile(profile);
-      setAvatar(dataUrl);
-    };
+    reader.onload = (e) => setAvatar(e.target?.result as string);
     reader.readAsDataURL(file);
+
+    // Subir a Supabase Storage
+    const ext = file.name.split('.').pop();
+    const fileName = `avatar_${Date.now()}.${ext}`;
+    const { data, error } = await supabase.storage
+      .from('avatars')
+      .upload(fileName, file, { upsert: true });
+
+    if (!error && data) {
+      const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(data.path);
+      profile.avatarDataUrl = urlData.publicUrl;
+    } else {
+      // Fallback: guardar base64 local si falla el upload
+      const r2 = new FileReader();
+      r2.onload = (e) => { profile.avatarDataUrl = e.target?.result as string; saveProfile(profile); };
+      r2.readAsDataURL(file);
+      return;
+    }
+    saveProfile(profile);
   });
 
   // Mostrar score guardado al cargar
   updateScore();
+
+  // Mostrar código de perfil
+  const code = getPlayerCode();
+  const codeEl = document.getElementById('profile-code-value');
+  if (codeEl) codeEl.textContent = code;
+
+  document.getElementById('profile-code-copy')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(code);
+    const btn = document.getElementById('profile-code-copy')!;
+    btn.textContent = '¡Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  });
+
+  // Login con código
+  const loginBtn    = document.getElementById('profile-login-btn')!;
+  const loginForm   = document.getElementById('profile-login-form')!;
+  const loginInput  = document.getElementById('profile-login-input') as HTMLInputElement;
+  const loginSubmit = document.getElementById('profile-login-submit')!;
+  const loginMsg    = document.getElementById('profile-login-msg')!;
+
+  loginBtn.addEventListener('click', () => {
+    const visible = loginForm.style.display !== 'none';
+    loginForm.style.display = visible ? 'none' : 'flex';
+  });
+
+  loginSubmit.addEventListener('click', async () => {
+    const inputCode = loginInput.value.trim();
+    if (!inputCode) return;
+
+    loginMsg.textContent = 'Buscando...';
+    const { data, error } = await supabase
+      .from('scores')
+      .select('nombre, avatar_url, score, codigo')
+      .eq('codigo', inputCode)
+      .limit(1);
+
+    if (error || !data || data.length === 0) {
+      loginMsg.textContent = '❌ Código no encontrado';
+      return;
+    }
+
+    const row = data[0];
+
+    // Restaurar código
+    localStorage.setItem('dino-player-code', inputCode);
+    if (codeEl) codeEl.textContent = inputCode;
+
+    // Restaurar nombre
+    nameInput.value = row.nombre;
+    profile.name = row.nombre;
+
+    // Restaurar avatar
+    if (row.avatar_url) {
+      profile.avatarDataUrl = row.avatar_url;
+      setAvatar(row.avatar_url);
+    }
+
+    // Restaurar score
+    const rawScore = Math.round(row.score / 0.025);
+    localStorage.setItem('dino-high-score', String(rawScore));
+    updateScore();
+
+    saveProfile(profile);
+    loginMsg.textContent = '✅ Cuenta restaurada';
+    loginForm.style.display = 'none';
+    loginInput.value = '';
+  });
 
   // Hacer el avatar cuadrado con el mismo alto que la columna de info
   const info = document.getElementById('profile-info')!;
